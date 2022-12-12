@@ -1,0 +1,63 @@
+package DHKE;
+
+import java.math.BigInteger;
+import java.util.Arrays;
+//Funktioniert :)))))))))))
+
+public class test {
+    public static void main(String[] args) {
+        long prim = 170809;
+        long generator = 0;
+        int minimumGen = 100000;
+        int genCount = 0;
+
+        for(int i = minimumGen; i < prim; i++){
+            //System.out.println("Test Generator: " + i);
+            if(test(i, prim)){
+                generator = i;
+                System.out.println(generator + " is a generator");
+                genCount++;
+                //System.out.println();
+            }
+        }
+        System.out.println(genCount);
+
+    }
+
+    static boolean test(long gen, long prim){
+        long[] generated = new long[Math.toIntExact(prim - 1)];
+        long count = 0;
+
+        for(int i = 1; i < prim-1; i++){
+            //System.out.println(("Checking number: " + i));
+            BigInteger bigGen = BigInteger.valueOf(gen);
+            BigInteger bigI = BigInteger.valueOf(i);
+            BigInteger bigPrim = BigInteger.valueOf(prim);
+            BigInteger bigCurrent = bigGen.modPow(bigI, bigPrim);
+            //long current = (long)(Math.pow(gen, i)%prim);
+            long current = bigCurrent.intValue();
+            if(isAlready(current, generated)){
+//                System.out.println(current + "  " + Arrays.toString(generated));
+//                System.out.println(gen + " is not a generator");
+//                System.out.println(count);
+//                System.out.println();
+                return false;
+            }else{
+                generated[i-1] = current;
+            }
+            count++;
+        }
+
+        //System.out.println("Count: " + count);
+        return true;
+    }
+
+    static boolean isAlready(long toFind, long[] arr){
+        for(long i = 0; i < arr.length; i ++){
+            if(toFind == arr[Math.toIntExact(i)]){
+                return true;
+            }
+        }
+        return false;
+    }
+}
